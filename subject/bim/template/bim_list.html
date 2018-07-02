@@ -28,7 +28,7 @@
 	<?php foreach($row as $k=>$v){?>	
 		<div class="layui-colla-item">
 			<h2 class="layui-colla-title">
-				<b class="bim-list-b">7</b>
+				<b class="bim-list-b"><?php echo ($k+1);?></b>
 				<span><?php echo $v['username'];?></span>
 				<span class="sjrq"><?php echo date('m月d日',$v['publitime']);?></span>
 				<span class="sjrq sjrq1"><?php echo date('H:i:s',$v['publitime']);?></span>

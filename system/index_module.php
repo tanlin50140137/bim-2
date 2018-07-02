@@ -119,7 +119,7 @@ function bim_success()
 #提交报名信息
 function SendNameInfo()
 {
-	session_start();
+	//session_start();
 	
 	$data['name'] = $_POST['name'];
 	if( $data['name'] == '' )
@@ -142,15 +142,42 @@ function SendNameInfo()
 	}
 	$data['flag'] = $_POST['flag'];
 	
-	$_SESSION['bim2_info'] = $data;
+	//$_SESSION['bim2_info'] = $data;
 	
 	$int = vcurl(EXTLINK,'act=BIM2Info2&'.http_build_query($data));
 
 	if( $int )
 	{
-		yeslisttofrom();
+			
+		$json = vcurl(EXTLINK,'act=BIM2Info2Info&'.http_build_query($data));
+		if($json!=null)
+		{
+			$rows = ParsingJson($json);
+		}
+			
+		$html = '';
+		$html .= '<div class="pay-succ-div">';
+		$html .= '<div class="div-icon"><i class="layui-icon">&#xe605;</i></div>';
+		$html .= '<p style="font-size:1rem;">报名成功!</p>';
+		$html .= '<p style="text-align:left; text-align:justify" >请保持电话畅通，广西BIM培训中心老师稍后会与你联系，并安排试课、培训、考试、工作等流程</p>';
+		$html .= '<p style="font-size:1rem; text-align:left">报名信息：</p>';
+		$html .= '<div class="font8" style="text-align:center; border: 1px solid #e0e0e0; border-bottom:none;padding:0.4rem 0;">'.$rows['txt']['username'].'</div>';
+		$html .= '<table border="1" class="bim-table bim-table1">';
+		$html .= '<tr>';
+		$html .= '<th width="30%">电话</th>';
+		$html .= '<th width="70%">'.$rows['txt']['tel'].'</th>';
+		$html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<th width="30%">QQ</th>';
+		$html .= '<th width="70%">'.$rows['txt']['qq'].'</th>';
+		$html .= '</tr>';
+		$html .= '</table>';
+		$html .= '</div>';
 		
-		echo json_encode(array('error'=>0,'txt'=>'报名成功'));
+		
+		echo json_encode(array('error'=>0,'txt'=>$html));
+		
+		yeslisttofrom();
 	}
 	else
 	{

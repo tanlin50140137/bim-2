@@ -8,8 +8,11 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge ,chrome=1" />
 <title>BIM</title>
+<link rel="stylesheet" type="text/css" href="<?php echo apth_url('subject/bim/layui/css/layui.css');?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo apth_url('subject/bim/css/bim-css.css');?>" />
 <script type="text/javascript" src="<?php echo apth_url('subject/bim/js/jquery.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo apth_url('subject/bim/layui/layui.js');?>"></script>
+
 </head>
 <body class="bim-body">
 <div class="mian-box">
@@ -260,10 +263,33 @@
 						<input type="text" value="" name="qq" placeholder="请输入您的QQ" class="input">
 					</li>
 				</ul>
-				<div><input type="button" value="点击提交" class="input-btn" onclick="SendForm();";></div>
+				<div><input type="button" value="点击提交" class="input-btn" onclick="SendForm();"></div>
 			</form>
 			<div class="zhushi">每周前20名报名 </br>享受免费试听名额</div>
 		</div>
+	</div>
+	<div class="pay-succ padd06" style="background:#fff; margin-top:0.8rem; display:none;" id="pay-succ-allinfo">
+	
+		<div class="pay-succ-div">
+			<div class="div-icon"><i class="layui-icon">&#xe605;</i></div>
+			<p style="font-size:1rem;">报名成功!</p>
+			<p style="text-align:left; text-align:justify" >请保持电话畅通，广西BIM培训中心老师稍后会与你联系，并安排试课、培训、考试、工作等流程</p>
+			<p style="font-size:1rem; text-align:left">报名信息：</p>
+
+			<div class="font8" style="text-align:center; border: 1px solid #e0e0e0; border-bottom:none;padding:0.4rem 0;">张三李四</div>
+			<table border="1" class="bim-table bim-table1">
+				<tr>
+					<th width="30%">电话</th>
+					<th width="70%">139888888888</th>
+				</tr>
+
+				<tr>
+					<th width="30%">QQ</th>
+					<th width="70%">134567822</th>
+				</tr>
+			</table>
+		</div>
+		
 	</div>
 	<div style="height:3.7rem;"></div>
 </div>
@@ -278,7 +304,7 @@
 		</li>
 
 		<li class="menu-message">
-			<a href="mqqwpa://im/chat?chat_type=wpa&uin=2851218873&version=1&src_type=web&web_src=lvlingseeds.com">
+			<a href="javascript:void(0);" onclick="QQ_SendTan();">
 				<img src="<?php echo apth_url('subject/bim/images/icon-16.png');?>" alt="QQ咨询">
 				<p>QQ咨询</p>
 			</a>
@@ -362,16 +388,20 @@
 			url:$(".form").attr('action'),
 			type:'POST',
 			data:$(".form").serialize(),
-			success:function(d){			
+			success:function(d){	
+				//console.log(d);return false;
 				var obj = eval("("+d+")");
 				if( obj.error == 0 )
 				{
 					$(".form")[0].reset();
 					
+					$("#pay-succ-allinfo").html(obj.txt);
+					
 					layui.use('layer', function(){
 						  var layer = layui.layer;		  
-						  layer.msg(obj.txt,{time:1000},function(){
-							  location.href="<?php echo apth_url('?act=bim_success');?>";
+						  layer.msg('报名成功',{time:1000},function(){
+							  //location.href="<?php echo apth_url('?act=bim_success');?>";
+							  hide();
 						  });
 					});						
 				}	
@@ -420,6 +450,27 @@ $(document).ready(function(e){
 	 var win=document.getElementById("win");
 	 bt.onclick=zd;
 	}
+</script>
+<script>
+function hide(){
+	$(".formbox").hide();
+	$(".pay-succ").show();
+}
+function QQ_SendTan()
+{
+	var ua = navigator.userAgent.toLowerCase();//获取判断用的对象
+	if(ua.match(/MicroMessenger/i) == "micromessenger")
+	{//微信
+		layui.use('layer', function(){
+			  var layer = layui.layer;		  
+			  layer.msg('使用QQ对话，请点击右上角，在浏览器打开');
+		});	
+	}
+	else
+	{
+		window.open("mqqwpa://im/chat?chat_type=wpa&uin=2851218873&version=1&src_type=web&web_src=lvlingseeds.com");
+	}
+}
 </script>
 </body>
 </html>
